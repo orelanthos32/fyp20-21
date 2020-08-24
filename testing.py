@@ -5,8 +5,8 @@ def testing(net, input, trueClass, ev):
     net = netFeedForward(net, input, trueClass)
     nData, m2 = trueClass.shape
     decreasingFactor = 0.001
-    # tbc
-    [~, acttualLabel] = np.amax(trueClass, axis=1)
+    # label
+    acttualLabel = np.argmax(trueClass, axis = 1)
     net.sigma = np.zeros([nData, m2])
 
 
@@ -17,7 +17,8 @@ def testing(net, input, trueClass, ev):
 
                 net.sigma[i,:] = net.sigma[i,:] + net.activityOutput[j][i,:]*net.betaOld[j]
                 # find out what this does
-                [~, net.classlabel[j][i,:]]= np.amax(net.activityOutput[j][i,:], axis=1)
+                net.classlabel[j][i,:] = np.argmax(net.activityOutput[j][i,:], axis=1)
+
 
                 # train the dynamic voting weight beta
                 compare = acctualLabel[i,:] - net.classlabel[j][i,:]
@@ -30,13 +31,13 @@ def testing(net, input, trueClass, ev):
                     net.beta[j] = min(net.beta[j]*(1 +net.p[j]),1)
             if i == nData-1:
                 if net.beta[j] !=0:
-                    c,d = net.weightSoftmax[j].shape
+                    c, d = net.weightSoftmax[j].shape
                     vw = 1
                 else:
                     c = 0
                     d = 0
                     vw = 0
-                a,b = size(net.weight[j])
+                a, b = size(net.weight[j])
                 nop = a*b + c*d +vw
                 # calculate num of node in each hidden layer
                 # matlab structure
@@ -47,15 +48,15 @@ def testing(net, input, trueClass, ev):
     # update voting weight
     net.beta = net.beta/sum(net.beta)
     net.betaOld = net.beta
-    #find out what this does
-    [~, net.index] = max(net.beta)
+    net.index = np.argmax(net.beta)
 
     # calculate classification rate
-    #this is probably wrong
+
     multiClassProb = np.amax(net.sigma, axis=1)
-    classPerdiction = np.where(arr == multiClassProb)
+    classPerdiction = np.argmax(net.sigma, axis=1)
     net.wrongClass = np.where(classPerdiction != acttualLabel)
     net.cr = 1 - np.size(net.wrongClass)/nData
     net.resudial_error = 1 - multiClassProb
     net.classPerdiction = classPerdiction
     net.acttualLabel = acttualLabel
+    return net

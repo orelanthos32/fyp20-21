@@ -11,7 +11,7 @@ def performanceMeasure(trueClass, rawOutput, nClass):
     precision = calculate_precision(label, predictedLabel, nClass)
     gMean = calculate_g_mean(recall,nClass)
     fMeasure = calculate_f_measure(lbel, predictedLabel, nClass)
-
+    return error, precision,gMean,fMeasure
 
 def index2vector(inputclass, nClass):
     output = np.zeros([len(inputclass), nClass])

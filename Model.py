@@ -12,6 +12,7 @@ class NeuralNetwork:
         self.output = "softmax"
 
         self.weight = []
+        self.loss = []
         self.velocity = []
         self.grad = []
         self.c = []
